@@ -1,0 +1,77 @@
+{
+  "name": "penplot",
+  "version": "1.0.0",
+  "description": "a lightweight tool for generative 2D line art",
+  "main": "./lib/penplot.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {
+    "alpha-complex": "^1.0.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0",
+    "body": "^5.1.0",
+    "body-parser": "^1.17.1",
+    "bound-points": "^1.0.0",
+    "budo": "^9.4.5",
+    "cdt2d": "^1.0.0",
+    "chalk": "^1.1.3",
+    "clamp": "^1.0.1",
+    "defined": "^1.0.0",
+    "delaunay-triangulate": "^1.1.6",
+    "dom-css": "^2.1.0",
+    "downloads-folder": "^1.0.0",
+    "keycode": "^2.1.8",
+    "loose-envify": "^1.3.1",
+    "loud-rejection": "^1.6.0",
+    "map-limit": "0.0.1",
+    "mkdirp": "^0.5.1",
+    "new-array": "^1.0.0",
+    "object-assign": "^4.1.1",
+    "raf-loop": "^1.1.3",
+    "seed-random": "^2.2.0",
+    "simplex-noise": "^2.3.0",
+    "smoothstep": "^1.0.1",
+    "svg-3d-simplicial-complex": "^0.1.1",
+    "uuid": "^3.0.1",
+    "xhr": "^2.4.0"
+  },
+  "devDependencies": {
+    "gl-vec2": "^1.0.0",
+    "gl-vec3": "^1.0.3"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "pen",
+    "plot",
+    "plotter",
+    "plotterart",
+    "ink",
+    "svg",
+    "2d",
+    "makeblock",
+    "xy",
+    "axidraw",
+    "axidrawv3",
+    "evil",
+    "mad",
+    "scientist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/penplot.git"
+  },
+  "homepage": "https://github.com/mattdesl/penplot",
+  "bugs": {
+    "url": "https://github.com/mattdesl/penplot/issues"
+  },
+  "bin": {
+    "penplot": "./bin/index.js"
+  }
+}
