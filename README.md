@@ -8,7 +8,14 @@ Experiments with AxiDraw v3 pen plotter.
 
 ## Usage
 
-[![NPM](https://nodei.co/npm/penplot.png)](https://www.npmjs.com/package/penplot)
+For now, git clone this repo and `npm install`. Then:
+
+```sh
+node bin/index.js example/plot/basic.js
+```
+
+Open `localhost:9966` and start editing that file. While in your browser session, push `Cmd/Ctrl + P` to export the SVG to a file in your Downloads folder.
+
 
 ## License
 

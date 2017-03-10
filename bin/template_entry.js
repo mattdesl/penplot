@@ -5,10 +5,10 @@ export default penplot(createPlot, {
   orientation: Orientation.LANDSCAPE
 });
 
-function createPlot (context, [ width, height ]) {
+function createPlot (context, dimensions) {
+  const [ width, height ] = dimensions;
+
   return {
-    name: '',
-    description: '',
     draw,
     animate: false,
     clear: true

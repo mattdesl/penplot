@@ -20,9 +20,8 @@ function dev (args, argv) {
     [ envify, { global: true } ]
   ];
 
-  const opts = assign({
-    title: 'penplot'
-  }, argv, {
+  const opts = assign({}, argv, {
+    title: 'penplot',
     live: true,
     browserify: {
       transform: transforms
@@ -35,6 +34,7 @@ function dev (args, argv) {
     ],
     serve: 'bundle.js'
   });
+  console.log(opts.title)
   const app = budo.cli(args, opts);
   app.on('connect', () => {
     console.log('connected')
