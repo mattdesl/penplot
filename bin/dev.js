@@ -34,10 +34,8 @@ function dev (args, argv) {
     ],
     serve: 'bundle.js'
   });
-  console.log(opts.title)
   const app = budo.cli(args, opts);
   app.on('connect', () => {
-    console.log('connected')
   });
   return app;
 
