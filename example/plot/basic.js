@@ -1,17 +1,15 @@
 import newArray from 'new-array';
 
-import penplot, { PaperSize, Orientation } from '../../';
-import { randomFloat, setSeed } from '../../random';
-import { polylinesToSVG } from '../../svg';
-
+import { PaperSize, Orientation } from 'penplot/constants';
+import { randomFloat, setSeed } from 'penplot/random';
+import { polylinesToSVG } from 'penplot/svg';
 setSeed(2);
 
-export default penplot(createPlot, {
-  dimensions: PaperSize.LETTER,
-  orientation: Orientation.PORTRAIT
-});
+export const orientation = Orientation.PORTRAIT;
+export const dimensions = PaperSize.LETTER;
+export const outputImageHeight = 800;
 
-function createPlot (context, dimensions) {
+export default function createPlot (context, dimensions) {
   const [ width, height ] = dimensions;
 
   const lineCount = 20;
