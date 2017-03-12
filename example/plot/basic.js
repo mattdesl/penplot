@@ -1,8 +1,8 @@
 import newArray from 'new-array';
 
-import { PaperSize, Orientation } from 'penplot/constants';
-import { randomFloat, setSeed } from 'penplot/random';
-import { polylinesToSVG } from 'penplot/svg';
+import { PaperSize, Orientation } from 'penplot';
+import { randomFloat, setSeed } from 'penplot/util/random';
+import { polylinesToSVG } from 'penplot/util/svg';
 setSeed(2);
 
 export const orientation = Orientation.PORTRAIT;

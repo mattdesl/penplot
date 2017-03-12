@@ -2,9 +2,7 @@
 
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-COMING SOON
-
-Experiments with AxiDraw v3 pen plotter.
+An experimental and opinionated development environment for generative and pen plotter art. 
 
 ## Usage
 

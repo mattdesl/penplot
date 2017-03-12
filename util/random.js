@@ -1,4 +1,5 @@
 // utility for random features
+
 import seedRandom from 'seed-random';
 import SimplexNoise from 'simplex-noise';
 

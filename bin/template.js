@@ -1,4 +1,4 @@
-import { PaperSize, Orientation } from 'penplot/constants';
+import { PaperSize, Orientation } from 'penplot';
 
 export const dimensions = PaperSize.LETTER;
 export const orientation = Orientation.LANDSCAPE;

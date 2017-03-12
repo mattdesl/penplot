@@ -9,11 +9,9 @@ const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
 
-const babelify = require('babelify').configure({
-  presets: [ 'es2015' ]
-});
+const babelify = require('./babelify');
+const installify = require('installify');
 const envify = require('loose-envify');
-const requirePlugin = require('./require-plugin');
 const downloadsFolder = require('downloads-folder');
 
 module.exports = dev
@@ -32,11 +30,14 @@ function dev (args, argv) {
     babelify
   ];
 
+  if (argv['auto-install']) {
+    transforms.push([ installify, { save: true } ]);
+  }
+
   const opts = assign({}, argv, {
     title: 'penplot',
     live: true,
     browserify: {
-      plugin: requirePlugin,
       transform: transforms
     },
     middleware: [
