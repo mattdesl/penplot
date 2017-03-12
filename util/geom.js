@@ -85,6 +85,7 @@ export function createHatchLines (bounds, angle = -Math.PI / 4, spacing = 0.5, o
   // Reference:
   // https://github.com/evil-mad/EggBot/blob/master/inkscape_driver/eggbot_hatch.py
   spacing = Math.abs(spacing);
+  if (spacing === 0) throw new Error('cannot use a spacing of zero as it will run an infinite loop!');
 
   const xmin = bounds[0][0];
   const ymin = bounds[0][1];
