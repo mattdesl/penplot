@@ -2,7 +2,20 @@
 
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-An experimental and opinionated development environment for generative and pen plotter art. 
+An experimental and highly opinionated development environment for generative and pen plotter art.
+
+Some features:
+
+- Zero configuration: just run a command and start writing `<canvas>` context commands
+- Fast live-reload on file save
+- Hotkey for high-quality PNG output
+- Hotkey for SVG rendering
+- A builtin library of utilities for random numbers, geometry tools, SVG exporting, and other functions
+- Easy integration with Inkscape and AxiDraw v3
+
+## Outputs
+
+
 
 ## Usage
 

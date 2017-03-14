@@ -8,6 +8,7 @@ const uuid = require('uuid/v1')
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
+const createClientTransform = require('./client-transform');
 
 const babelify = require('./babelify');
 const installify = require('installify');
@@ -15,7 +16,7 @@ const envify = require('loose-envify');
 const downloadsFolder = require('downloads-folder');
 
 module.exports = dev
-function dev (args, argv) {
+function dev (args, argv, entries) {
   let printOutputFolder;
   let isDownloads = false;
   if (argv.output) {
@@ -24,9 +25,14 @@ function dev (args, argv) {
     isDownloads = true;
     printOutputFolder = downloadsFolder();
   }
-  
+
+  // replace entry with our own client
+  const clientEntry = path.resolve(__dirname, '../lib/client.js');
+  argv._ = [ clientEntry ];
+
+  const generateClient = createClientTransform(clientEntry, entries);
   const transforms = [
-    envify, // needs to be before babelify for client.js library
+    generateClient,
     babelify
   ];
 
@@ -34,9 +40,22 @@ function dev (args, argv) {
     transforms.push([ installify, { save: true } ]);
   }
 
+  // entry for client require()
+  // const cwd = process.cwd();
+  // process.env.PENPLOT_ENTRY = path.resolve(entries[0]);
+
+  // // generate some nice code
+  // const entryNames = entries.map(file => {
+  //   return path.relative(cwd, file);
+  // });
+  // const entryImports = 
+  // process.env.PENPLOT_ENTRIES = JSON.stringify(entryNames);
+
   const opts = assign({}, argv, {
     title: 'penplot',
     live: true,
+    pushstate: true,
+    base: '/',
     browserify: {
       transform: transforms
     },
@@ -50,6 +69,16 @@ function dev (args, argv) {
   });
   const app = budo.cli(args, opts);
   return app;
+
+  function middleware (req, res, next) {
+    if (req.url === '/print') {
+      getFile('svg', file => svg(file, req, res));
+    } else if (req.url === '/save') {
+      getFile('png', file => png(file, req, res));
+    } else {
+      next();
+    }
+  }
 
   function composeFile (name, extension, number) {
     return (number === 0 ? name : `${name} (${number})`) + `.${extension}`;
@@ -82,7 +111,7 @@ function dev (args, argv) {
   }
 
   function getDisplayPath (filePath) {
-    return isDownloads ? filePath : path.relative(process.cwd(), filePath);
+    return isDownloads ? filePath : path.relative(cwd, filePath);
   }
 
   function svg (filePath, req, res) {
@@ -118,15 +147,5 @@ function dev (args, argv) {
       res.writeHead(200, 'ok');
       res.end();
     });
-  }
-
-  function middleware (req, res, next) {
-    if (req.url === '/print') {
-      getFile('svg', file => svg(file, req, res));
-    } else if (req.url === '/save') {
-      getFile('png', file => png(file, req, res));
-    } else {
-      next();
-    }
   }
 }
