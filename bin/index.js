@@ -7,13 +7,14 @@ const chalk = require('chalk');
 const mkdirp = require('mkdirp');
 const glob = require('globby');
 
-glob(argv._).then(paths => {
-  if (paths.length === 0) {
-    console.error(chalk.red('‣ ERROR'), 'You must specify a file path:')
-    console.error(chalk.dim('    penplot myplot.js'));
-    process.exit(1);
-  }
+if (argv._.length === 0) {
+  console.error(chalk.red('‣ ERROR'), 'You must specify a file path:')
+  console.error(chalk.dim('    penplot myplot.js'));
+  process.exit(1);
+}
 
+const promise = argv.write ? Promise.resolve([ argv._[0] ]) : glob(argv._);
+promise.then(paths => {
   if (paths.length > 1) {
     console.log(chalk.cyan(`‣ Bundling ${chalk.bold(paths.length)} entries...`));
     start(paths);
