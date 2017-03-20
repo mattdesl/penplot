@@ -27,9 +27,7 @@ export const FaceCull = {
   NONE: 0
 };
 
-// Whether the 3D triangle face is visible to the camera
-// i.e. backface / frontface culling
-export function isFaceVisible (cell, vertices, rayDir, side = FaceCull.BACK) {
+function isTriangleVisible (cell, vertices, rayDir, side = FaceCull.BACK) {
   if (side === FaceCull.NONE) return true;
   const verts = cell.map(i => vertices[i]);
   const v0 = verts[0];
@@ -41,6 +39,16 @@ export function isFaceVisible (cell, vertices, rayDir, side = FaceCull.BACK) {
   vec3.normalize(tmp1, tmp1);
   const d = vec3.dot(rayDir, tmp1);
   return side === FaceCull.BACK ? d > 0 : d <= 0;
+}
+
+// Whether the 3D triangle face is visible to the camera
+// i.e. backface / frontface culling
+export function isFaceVisible (cell, vertices, rayDir, side = FaceCull.BACK) {
+  if (side === FaceCull.NONE) return true;
+  if (cell.length === 3) {
+    return isTriangleVisible(cell, vertices, rayDir, side);
+  }
+  if (cell.length !== 4) throw new Error('isFaceVisible can only handle triangles and quads');
 }
 
 export function clipPolylinesToBox (polylines, bbox, border = false, closeLines = true) {

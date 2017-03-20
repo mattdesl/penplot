@@ -36,6 +36,7 @@
     "insert-css": "^2.0.0",
     "installify": "^1.1.0",
     "is-buffer": "^1.1.4",
+    "is-promise": "^2.1.0",
     "keycode": "^2.1.8",
     "lerp": "^1.0.3",
     "lineclip": "^1.1.5",
