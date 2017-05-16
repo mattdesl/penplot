@@ -7,7 +7,6 @@ setSeed(2);
 
 export const orientation = Orientation.PORTRAIT;
 export const dimensions = PaperSize.LETTER;
-export const outputImageHeight = 800;
 
 export default function createPlot (context, dimensions) {
   const [ width, height ] = dimensions;

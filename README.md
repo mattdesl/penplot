@@ -6,7 +6,7 @@ An experimental and highly opinionated development environment for generative an
 
 Some features:
 
-- Zero configuration: just run a command and start writing `<canvas>` context commands
+- Zero configuration: just run a command and start writing `<canvas>` renderings
 - Fast live-reload on file save
 - Hotkey for high-quality PNG output
 - Hotkey for SVG rendering

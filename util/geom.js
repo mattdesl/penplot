@@ -130,6 +130,8 @@ export function createHatchLines (bounds, angle = -Math.PI / 4, spacing = 0.5, o
   return out;
 }
 
+
+
 export function intersectLineSegmentLineSegment (p1, p2, p3, p4) {
   // Reference:
   // https://github.com/evil-mad/EggBot/blob/master/inkscape_driver/eggbot_hatch.py
