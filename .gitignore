@@ -7,3 +7,4 @@ example/plot/
 !example/plot/basic.js
 !example/plot/commonjs.js
 tmp
+*.mp4

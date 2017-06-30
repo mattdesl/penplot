@@ -51,6 +51,7 @@
     "moment": "^2.17.1",
     "new-array": "^1.0.0",
     "object-assign": "^4.1.1",
+    "pad-left": "^2.1.0",
     "primitive-cube": "^2.0.0",
     "quantize-vertices": "^1.0.2",
     "raf-loop": "^1.1.3",

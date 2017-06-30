@@ -15,13 +15,23 @@ if (argv._.length === 0) {
 
 const promise = argv.write ? Promise.resolve([ argv._[0] ]) : glob(argv._);
 promise.then(paths => {
+  paths = (Array.isArray(paths) ? paths : [ paths ]).filter(Boolean);
+  if (paths.length === 0) {
+    paths = argv._.slice();
+  }
+
   if (paths.length > 1) {
     console.log(chalk.cyan(`‣ Bundling ${chalk.bold(paths.length)} entries...`));
     start(paths);
   } else {
     const entry = paths[0];
     // if the file doesn't exist, stub it out
-    isFile(entry, exists => {
+    isFile(entry, (err, exists) => {
+      if (err) {
+        console.error(chalk.red('‣ ERROR'), 'Could not read file:', chalk.bold(entry));
+        console.error(err);
+        return;
+      }
       if (exists) {
         start(entry);
       } else if (argv.write) {
@@ -62,13 +72,13 @@ function start (entries) {
 function isFile (file, cb) {
   fs.stat(file, function (err, stat) {
     if (!err) {
-      if (!stat.isFile()) throw new Error(`${file} is not a file!`);
-      return cb(true);
+      if (!stat.isFile()) return cb(new Error(`${file} is not a file!`), false);
+      return cb(null, true);
     }
     if (err.code === 'ENOENT') {
-      cb(false);
+      cb(null, false);
     } else {
-      throw err;
+      cb(err, false);
     }
   })
 }

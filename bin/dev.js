@@ -4,12 +4,14 @@ const chalk = require('chalk');
 const assign = require('object-assign');
 const budo = require('budo');
 const bodyParser = require('body-parser');
+const defined = require('defined');
 const uuid = require('uuid/v1')
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
 const createClientTransform = require('./client-transform');
 
+const padLeft = require('pad-left');
 const babelify = require('./babelify');
 const installify = require('installify');
 const envify = require('loose-envify');
@@ -17,6 +19,8 @@ const downloadsFolder = require('downloads-folder');
 
 module.exports = dev
 function dev (args, argv, entries) {
+  const cwd = process.cwd();
+
   let printOutputFolder;
   let isDownloads = false;
   if (argv.output) {
@@ -25,6 +29,8 @@ function dev (args, argv, entries) {
     isDownloads = true;
     printOutputFolder = downloadsFolder();
   }
+
+  const isSequence = argv.sequence;
 
   // replace entry with our own client
   const clientEntry = path.resolve(__dirname, '../lib/client.js');
@@ -41,7 +47,6 @@ function dev (args, argv, entries) {
   }
 
   // entry for client require()
-  // const cwd = process.cwd();
   // process.env.PENPLOT_ENTRY = path.resolve(entries[0]);
 
   // // generate some nice code
@@ -72,9 +77,9 @@ function dev (args, argv, entries) {
 
   function middleware (req, res, next) {
     if (req.url === '/print') {
-      getFile('svg', file => svg(file, req, res));
+      getFile('svg', req, file => svg(file, req, res));
     } else if (req.url === '/save') {
-      getFile('png', file => png(file, req, res));
+      getFile('png', req, file => png(file, req, res));
     } else {
       next();
     }
@@ -84,7 +89,15 @@ function dev (args, argv, entries) {
     return (number === 0 ? name : `${name} (${number})`) + `.${extension}`;
   }
 
-  function getFile (extension, cb) {
+  function getFile (extension, req, cb) {
+    if (isSequence && req.body && typeof req.body.frame === 'number') {
+      const curFrame = req.body.frame;
+      const totalFrameDigits = Math.max(4, String(defined(req.body.totalFrames, 1000)).length);
+      const name = padLeft(String(curFrame), totalFrameDigits, '0');
+      return process.nextTick(function () {
+        cb(path.resolve(printOutputFolder, `${name}.${extension}`));
+      });
+    }
     fs.readdir(printOutputFolder, (err, files) => {
       if (err) {
         console.error(chalk.yellow(`‣ WARN`), 'Could not read folder:', chalk.bold(printOutputFolder));
