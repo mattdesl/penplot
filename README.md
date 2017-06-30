@@ -15,14 +15,18 @@ Some features:
 
 ## Outputs
 
-
-
 ## Usage
 
-For now, git clone this repo and `npm install`. Then:
+You can install this with npm.
 
 ```sh
-node bin/index.js example/plot/basic.js --open
+npm install penplot -g
+```
+
+Then, run it any time like so:
+
+```sh
+penplot src/index.js --open
 ```
 
 This will open `localhost:9966`, and you can start editing the `basic.js` script. While in your browser session, push `Cmd/Ctrl + P` to export the SVG to a file in your Downloads folder.
