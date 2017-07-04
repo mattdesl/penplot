@@ -3,9 +3,11 @@ import vec2 from 'gl-vec2';
 import lineclip from 'lineclip';
 import arrayAlmostEqual from 'array-almost-equal';
 import triangleCentroid from 'triangle-centroid';
+import insideTriangle from 'point-in-triangle';
 
 const tmp1 = [];
 const tmp2 = [];
+const tmpTriangle = [ 0, 0, 0 ];
 
 // Random point in N-dimensional triangle
 export function randomPointInTriangle (out = [], a, b, c, u = random(), v = random()) {
@@ -154,11 +156,11 @@ export function intersectLineSegmentLineSegment (p1, p2, p3, p4) {
   return sa;
 }
 
-function shrinkWithBorder (point, centroid, border) {
-  point = vec3.copy([], point);
+export function expandVector (point, centroid, amount = 0) {
+  point = vec2.copy([], point);
   const dir = vec2.subtract([], centroid, point);
   const maxLen = vec2.length(dir);
-  const len = Math.min(maxLen, border);
+  const len = Math.min(maxLen, amount);
   if (maxLen !== 0) vec2.scale(dir, dir, 1 / maxLen); // normalize
   vec2.scaleAndAdd(point, point, dir, len);
   return point;
@@ -167,9 +169,19 @@ function shrinkWithBorder (point, centroid, border) {
 export function clipLineToTriangle (p1, p2, a, b, c, border = 0, result = []) {
   if (border !== 0) {
     let centroid = triangleCentroid([ a, b, c ]);
-    a = shrinkWithBorder(a, centroid, border);
-    b = shrinkWithBorder(b, centroid, border);
-    c = shrinkWithBorder(c, centroid, border);
+    a = expandVector(a, centroid, border);
+    b = expandVector(b, centroid, border);
+    c = expandVector(c, centroid, border);
+  }
+
+  // first check if all points are inside triangle
+  tmpTriangle[0] = a;
+  tmpTriangle[1] = b;
+  tmpTriangle[2] = c;
+  if (insideTriangle(p1, tmpTriangle) && insideTriangle(p2, tmpTriangle)) {
+    result[0] = p1.slice();
+    result[1] = p2.slice();
+    return true;
   }
 
   // triangle segments

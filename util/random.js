@@ -9,9 +9,9 @@ let currentSimplex = new SimplexNoise(currentRandom);
 
 export const random = () => currentRandom();
 
-export const setSeed = seed => {
+export const setSeed = (seed, opt) => {
   if (typeof seed === 'number' || typeof seed === 'string') {
-    currentRandom = seedRandom(seed);
+    currentRandom = seedRandom(seed, opt);
   } else {
     currentRandom = defaultRandom;
   }

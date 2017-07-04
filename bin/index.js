@@ -23,6 +23,9 @@ promise.then(paths => {
     // if the file doesn't exist, stub it out
     isFile(entry, exists => {
       if (exists) {
+        if (argv.write) {
+          console.error(chalk.yellow('‣ WARN'), 'Ignoring --write argument, file exists:', chalk.bold(entry));
+        }
         start(entry);
       } else if (argv.write) {
         console.log(chalk.cyan(`‣ Writing plot file to:`), chalk.bold(entry));
