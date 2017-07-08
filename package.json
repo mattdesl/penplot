@@ -1,6 +1,6 @@
 {
   "name": "penplot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a lightweight tool for generative 2D line art",
   "main": "./lib/penplot.js",
   "license": "MIT",
