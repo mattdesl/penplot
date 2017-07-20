@@ -9,14 +9,17 @@ const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
 const createClientTransform = require('./client-transform');
+const createEnvify = require('envify/custom');
 
 const babelify = require('./babelify');
 const installify = require('installify');
 const envify = require('loose-envify');
 const downloadsFolder = require('downloads-folder');
+const unreachableBranch = require('unreachable-branch-transform');
 
 module.exports = dev
 function dev (args, argv, entries) {
+  const cwd = process.cwd();
   let printOutputFolder;
   let isDownloads = false;
   if (argv.output) {
@@ -26,49 +29,59 @@ function dev (args, argv, entries) {
     printOutputFolder = downloadsFolder();
   }
 
-  // replace entry with our own client
-  const clientEntry = path.resolve(__dirname, '../lib/client.js');
-  argv._ = [ clientEntry ];
-
-  const generateClient = createClientTransform(clientEntry, entries);
-  const transforms = [
-    generateClient,
-    babelify
-  ];
-
-  if (argv['auto-install']) {
-    transforms.push([ installify, { save: true } ]);
+  const envVars = {};
+  const isNode = argv.node;
+  if (isNode) {
+    process.env.IS_NODE = envVars.IS_NODE = '1';
   }
 
-  // entry for client require()
-  // const cwd = process.cwd();
-  // process.env.PENPLOT_ENTRY = path.resolve(entries[0]);
+  if (isNode) {
+    require('babel-register')(babelify.getOptions());
+    if (entries.length > 1 || entries.length === 0) {
+      throw new Error('The --node option only supports a single entry right now.');
+    }
+    const entryName = entries[0];
+    const entryFile = path.resolve(cwd, entries[0])
+    const opts = {
+      output: argv.output
+    }
+    require('../lib/node-client.js')(entryName, entryFile, opts);
+  } else {
+    // replace entry with our own client
+    const clientEntry = path.resolve(__dirname, '../lib/browser-client.js');
+    argv._ = [ clientEntry ];
 
-  // // generate some nice code
-  // const entryNames = entries.map(file => {
-  //   return path.relative(cwd, file);
-  // });
-  // const entryImports = 
-  // process.env.PENPLOT_ENTRIES = JSON.stringify(entryNames);
+    const generateClient = createClientTransform(clientEntry, entries);
+    const transforms = [
+      generateClient,
+      babelify.getTransform(),
+      createEnvify(envVars),
+      unreachableBranch
+    ];
 
-  const opts = assign({}, argv, {
-    title: 'penplot',
-    live: true,
-    pushstate: true,
-    base: '/',
-    browserify: {
-      transform: transforms
-    },
-    middleware: [
-      bodyParser.json({
-        limit: '1gb'
-      }),
-      middleware
-    ],
-    serve: 'bundle.js'
-  });
-  const app = budo.cli(args, opts);
-  return app;
+    if (argv['auto-install']) {
+      transforms.push([ installify, { save: true } ]);
+    }
+
+    const opts = assign({}, argv, {
+      title: 'penplot',
+      live: true,
+      pushstate: true,
+      base: '/',
+      browserify: {
+        transform: transforms
+      },
+      middleware: [
+        bodyParser.json({
+          limit: '1gb'
+        }),
+        middleware
+      ],
+      serve: 'bundle.js'
+    });
+
+    budo.cli(args, opts);
+  }
 
   function middleware (req, res, next) {
     if (req.url === '/print') {

@@ -23,11 +23,17 @@ files.forEach(file => {
   alias[file.name] = file.filePath;
 });
 
-module.exports = require('babelify').configure({
-  presets: [ require.resolve('babel-preset-es2015') ],
-  plugins: [
-    [ require.resolve('babel-plugin-module-resolver'), {
-      alias
-    } ]
-  ]
-});
+module.exports.getTransform = function () {
+  return require('babelify').configure(module.exports.getOptions());
+};
+
+module.exports.getOptions = function () {
+  return {
+    presets: [ require.resolve('babel-preset-es2015') ],
+    plugins: [
+      [ require.resolve('babel-plugin-module-resolver'), {
+        alias
+      } ]
+    ]
+  };
+};
