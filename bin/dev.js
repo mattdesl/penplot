@@ -1,33 +1,25 @@
 require('loud-rejection')();
 
-const chalk = require('chalk');
 const assign = require('object-assign');
 const budo = require('budo');
 const bodyParser = require('body-parser');
-const uuid = require('uuid/v1')
 const path = require('path');
 const fs = require('fs');
-const moment = require('moment');
 const createClientTransform = require('./client-transform');
 const createEnvify = require('envify/custom');
 
 const babelify = require('./babelify');
 const installify = require('installify');
-const envify = require('loose-envify');
-const downloadsFolder = require('downloads-folder');
 const unreachableBranch = require('unreachable-branch-transform');
+const createFileSaver = require('./file-saver');
 
-module.exports = dev
+module.exports = dev;
 function dev (args, argv, entries) {
   const cwd = process.cwd();
-  let printOutputFolder;
-  let isDownloads = false;
-  if (argv.output) {
-    printOutputFolder = argv.output;
-  } else {
-    isDownloads = true;
-    printOutputFolder = downloadsFolder();
-  }
+  const fileSaver = createFileSaver({
+    output: argv.output,
+    cwd: cwd
+  });
 
   const envVars = {};
   const isNode = argv.node;
@@ -40,11 +32,29 @@ function dev (args, argv, entries) {
     if (entries.length > 1 || entries.length === 0) {
       throw new Error('The --node option only supports a single entry right now.');
     }
+
+    const isStdout = argv.stdout;
     const entryName = entries[0];
-    const entryFile = path.resolve(cwd, entries[0])
+    const entryFile = path.resolve(cwd, entries[0]);
     const opts = {
-      output: argv.output
-    }
+      onComplete: (context) => {
+        const runSave = stream => {
+          context.canvas.pngStream().pipe(stream);
+        };
+
+        if (isStdout) {
+          runSave(process.stdout);
+        } else {
+          fileSaver.getFile('png', (filePath) => {
+            const outStream = fs.createWriteStream(filePath);
+            outStream.on('close', () => {
+              fileSaver.printDisplayPath(filePath);
+            });
+            runSave(outStream);
+          });
+        }
+      }
+    };
     require('../lib/node-client.js')(entryName, entryFile, opts);
   } else {
     // replace entry with our own client
@@ -85,46 +95,12 @@ function dev (args, argv, entries) {
 
   function middleware (req, res, next) {
     if (req.url === '/print') {
-      getFile('svg', file => svg(file, req, res));
+      fileSaver.getFile('svg', file => svg(file, req, res));
     } else if (req.url === '/save') {
-      getFile('png', file => png(file, req, res));
+      fileSaver.getFile('png', file => png(file, req, res));
     } else {
       next();
     }
-  }
-
-  function composeFile (name, extension, number) {
-    return (number === 0 ? name : `${name} (${number})`) + `.${extension}`;
-  }
-
-  function getFile (extension, cb) {
-    fs.readdir(printOutputFolder, (err, files) => {
-      if (err) {
-        console.error(chalk.yellow(`‣ WARN`), 'Could not read folder:', chalk.bold(printOutputFolder));
-        console.error(err);
-        cb(path.resolve(printOutputFolder, uuid() + `.${extension}`));
-      } else {
-        const type = extension === 'svg' ? 'Plot' : 'Render';
-        const date = moment().format('YYYY-MM-DD [at] h.mm.ss A');
-        let name = `${type} - ${date}`;
-        let number = 0;
-        while (true) {
-          let test = composeFile(name, extension, number);
-          if (files.indexOf(test) >= 0) {
-            // file already exists
-            number++;
-          } else {
-            break;
-          }
-        }
-        const fileName = composeFile(name, extension, number);
-        cb(path.resolve(printOutputFolder, fileName));
-      }
-    });
-  }
-
-  function getDisplayPath (filePath) {
-    return isDownloads ? filePath : path.relative(cwd, filePath);
   }
 
   function svg (filePath, req, res) {
@@ -138,7 +114,7 @@ function dev (args, argv, entries) {
         res.writeHead(400, err.message);
         return res.end();
       }
-      console.log(chalk.cyan(`‣ Saved SVG print to:`), chalk.bold(getDisplayPath(filePath)));
+      fileSaver.printDisplayPath(filePath);
       res.writeHead(200, 'ok');
       res.end();
     });
@@ -156,7 +132,7 @@ function dev (args, argv, entries) {
         res.writeHead(400, err.message);
         return res.end();
       }
-      console.log(chalk.cyan(`‣ Saved PNG canvas to:`), chalk.bold(getDisplayPath(filePath)));
+      fileSaver.printDisplayPath(filePath);
       res.writeHead(200, 'ok');
       res.end();
     });

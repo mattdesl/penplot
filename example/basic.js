@@ -29,12 +29,13 @@ export default function createPlot (context, dimensions) {
       return [ x * r + width / 2, y * r + height / 2 ];
     });
   });
-  
+
   return {
     draw,
     print,
     animate: false,
-    clear: true
+    clear: true,
+    background: 'white'
   };
 
   function draw () {
