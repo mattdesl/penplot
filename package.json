@@ -86,8 +86,7 @@
     "gl-vec3": "^1.0.3",
     "icosphere": "^1.0.0",
     "nice-color-palettes": "^2.0.0",
-    "perspective-camera": "^2.0.1",
-    "poisson-disk-sampling": "^1.0.1"
+    "perspective-camera": "^2.0.1"
   },
   "scripts": {
     "test": "node test.js"
