@@ -155,27 +155,27 @@ The default output width is 1280 px.
 
 ## Some Examples
 
-In the [examples](./examples) folder you will find some variations of plots.
+In the [example](./example) folder you will find some variations of plots.
 
-##### [simple-circles.js](./examples/simple-circles.js)
+##### [simple-circles.js](./example/simple-circles.js)
 
 <img src="docs/screenshots/circles-1.png" width="50%" />
 
 This example shows the basics of using *penplot* for hardware like AxiDraw V3. You can run it like so:
 
 ```sh
-penplot examples/simple-circles.js --open
+penplot example/simple-circles.js --open
 ```
 
 And hit `Cmd/Ctrl + S` or `Cmd/Ctrl + P` to save a PNG or SVG file, respectively.
 
-##### [swirling-circles.js](./examples/swirling-circles.js)
+##### [swirling-circles.js](./example/swirling-circles.js)
 
 <img src="docs/screenshots/circles-2.png" width="50%" />
 
 This example shows how you can use a built-in function `clipPolylinesToBox` in `penplot/util/geom.js` to clip the lines to a margin.
 
-##### [generative-paint.js](./examples/generative-paint.js)
+##### [generative-paint.js](./example/generative-paint.js)
 
 <img src="docs/screenshots/paint-1.png" width="50%" />
 
