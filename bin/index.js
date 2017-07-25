@@ -39,17 +39,19 @@ promise.then(paths => {
           });
         });
       } else {
-        console.error(chalk.red('‣ ERROR'), 'File does not exist:', chalk.bold(entry));
-        console.error('\nUse --write if you want to stub a new file, for e.g.');
-        console.error('    penplot myplot.js --write');
-        process.exit(1);
+        fileError(entry);
       }
     });
   }
+}).catch(() => {
+  fileError(argv._[0]);
 });
 
-function runSingle (entry) {
-  // body...
+function fileError (entry) {
+  console.error(chalk.red('‣ ERROR'), 'File does not exist:', chalk.bold(entry));
+  console.error('\nUse --write if you want to stub a new file, for e.g.');
+  console.error('    penplot myplot.js --write');
+  process.exit(1);
 }
 
 function start (entries) {

@@ -12,6 +12,7 @@ Some features:
 - Hotkey for SVG rendering
 - A builtin library of utilities for random numbers, geometry tools, SVG exporting, and other functions
 - Easy integration with Inkscape and AxiDraw v3
+- Plots can be rendered in Node.js instead of the browser, sometimes useful for huge print sizes where the browser may have more strict memory limits
 
 ## Quick Start
 
@@ -34,6 +35,64 @@ This will write a new `src/index.js` file and open `localhost:9966`. Now start e
 While in your browser session, you can hit `Cmd/Ctrl + P` to export the SVG to a file in your Downloads folder, or `Cmd/Ctrl + S` to save a PNG file.
 
 The SVG should be formatted to fit a Letter size paper with a pen plotter like AxiDraw V3.
+
+## Penplot Modules
+
+The *penplot* tool is both a development environment and kitchen sink of utility functions. It tries to make some aspects easier for you, like sizing and printing to SVG or PNG.
+
+The `--write` flag generates a simple plot that looks like this:
+
+```js
+// Some handy functions & constants
+import { PaperSize, Orientation } from 'penplot';
+import { polylinesToSVG } from 'penplot/util/svg';
+import { clipPolylinesToBox } from 'penplot/util/geom';
+
+// Export the paper layout & dimensions for penplot to set up
+export const orientation = Orientation.LANDSCAPE;
+export const dimensions = PaperSize.LETTER;
+
+// The plot functiond defines how the artwork will look
+export default function createPlot (context, dimensions) {
+  const [ width, height ] = dimensions;
+  let lines = [];
+
+  // Add [ x, y ] points to the array of lines
+  // e.g. [ [ 5, 2 ], [ 2, 3 ] ] is one line
+  ... algorithmic code ...
+
+  // Clip all the lines to a 1.5 cm margin for our pen plotter
+  const margin = 1.5;
+  const box = [ margin, margin, width - margin, height - margin ];
+  lines = clipPolylinesToBox(lines, box);
+
+  return {
+    draw,
+    print,
+    background: 'white' // used when exporting the canvas to PNG
+  };
+
+  function draw () {
+    lines.forEach(points => {
+      context.beginPath();
+      points.forEach(p => context.lineTo(p[0], p[1]));
+      context.stroke();
+    });
+  }
+
+  function print () {
+    return polylinesToSVG(lines, {
+      dimensions
+    });
+  }
+}
+```
+
+All units here are in centimeters, which makes it easy to reason about things like line thickness and distances.
+
+Using an array of line primitives, you can build up complex prints that can be easily exported to SVG or PNG. However, this means everything will be built from line segments; e.g. circles are generated with `cos()` and `sin()`.
+
+See the [examples](./examples) folder for more.
 
 ## More Commands
 
