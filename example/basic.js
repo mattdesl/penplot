@@ -1,6 +1,6 @@
 import newArray from 'new-array';
 
-import { PaperSize, Orientation } from 'penplot';
+import { PaperSize, Orientation, cmToPixels } from 'penplot';
 import { randomFloat, setSeed } from 'penplot/util/random';
 import { polylinesToSVG } from 'penplot/util/svg';
 setSeed(2);
@@ -35,7 +35,7 @@ export default function createPlot (context, dimensions) {
     print,
     animate: false,
     clear: true,
-    background: 'white'
+    background: 'white',
   };
 
   function draw () {
