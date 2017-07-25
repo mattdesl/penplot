@@ -1,7 +1,7 @@
 /*
-  This is an advanced example of a generative/algorithmic
-  print designed with `penplot`. It is mostly built from
-  concentric circles of different arc lengths, and a lot of
+  This is a more advanced example of a generative/algorithmic
+  print created with `penplot` and Canvas2D. It mostly consists of
+  concentric circles with different arc lengths and a lot of
   random offsets.
 */
 
@@ -15,7 +15,7 @@ import fromCSS from 'css-color-converter';
 
 // often it's handy to mark down a nice seed so you can re-print it later
 // at a different size
-const seed = '42032'; // '76379';
+const seed = '42032';
 
 // other times you may want to idly browse through random seeds
 // const seed = String(Math.floor(Math.random() * 100000));
