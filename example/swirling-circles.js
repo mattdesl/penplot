@@ -44,7 +44,6 @@ export default function createPlot (context, dimensions) {
   };
 
   function draw () {
-    console.log(width, height)
     lines.forEach(points => {
       context.beginPath();
       points.forEach(p => context.lineTo(p[0], p[1]));

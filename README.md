@@ -88,11 +88,11 @@ export default function createPlot (context, dimensions) {
 }
 ```
 
-All units here are in centimeters, which makes it easy to reason about things like line thickness and distances.
+All units here are in centimeters (including `width` and `height`), which makes it easy to reason about things like line thickness and distances.
 
 Using an array of line primitives, you can build up complex prints that can be easily exported to SVG or PNG. However, this means everything will be built from line segments; e.g. circles are generated with `cos()` and `sin()`.
 
-See the [examples](./examples) folder for more.
+See the [Some Examples](#some-examples) for more inspiration.
 
 ## More Commands
 
@@ -122,19 +122,20 @@ penplot plot.js --node --output=tmp
 
 You can also use this as a tool for developing algorithmic/generative art. For example, you can develop the artwork in a browser for LiveReload and fast iterations, and when you want to print it you can set the dimensions and output size like so:
 
-```
+```js
 // desired orientation
 export const orientation = Orientation.PORTRAIT;
 
 // desired dimensions in CM (used for aspect ratio)
 export const dimensions = PaperSize.LETTER;
 
-// desired pixel output size, i.e. 8.5 in @ 300 DPI
-export const outputImageWidth = 2550;
-
 // your artwork
 export default function createPlot (context, dimensions) {
-  ...
+  // your artwork...
+
+  return {
+    outputSize: '300 dpi'
+  }
 }
 ```
 
@@ -143,6 +144,44 @@ Then, use the `--node` flag to run the plot with `node-canvas`, assuming none of
 ```sh
 penplot my-plot.js --node --stdout > render.png
 ```
+
+The `outputSize` option can be any of the following:
+
+- a string with DPI resolution like `'300dpi'` or `'72 DPI'`
+- a single number to use as the pixel width; in this case the height is computed automatically based on the `dimensions` aspect
+- an array of `[ width, height ]`, where either (or both) can be specified as pixel sizes. If you specify `'auto'`, `-1` or `null` as a dimension, it will be computed automatically based on the aspect ratio
+
+The default output width is 1280 px.
+
+## Some Examples
+
+In the [examples](./examples) folder you will find some variations of plots.
+
+##### [simple-circles.js](./examples/simple-circles.js)
+
+<img src="docs/screenshots/circles-1.png" width="50%" />
+
+This example shows the basics of using *penplot* for hardware like AxiDraw V3. You can run it like so:
+
+```sh
+penplot examples/simple-circles.js --open
+```
+
+And hit `Cmd/Ctrl + S` or `Cmd/Ctrl + P` to save a PNG or SVG file, respectively.
+
+##### [swirling-circles.js](./examples/swirling-circles.js)
+
+<img src="docs/screenshots/circles-2.png" width="50%" />
+
+This example shows how you can use a built-in function `clipPolylinesToBox` in `penplot/util/geom.js` to clip the lines to a margin.
+
+##### [generative-paint.js](./examples/generative-paint.js)
+
+<img src="docs/screenshots/paint-1.png" width="50%" />
+
+This example shows a more complex algorithmic artwork, and how you can use penplot as a development environment for print-size generative art even when you have no plans to print it to a pen plotter.
+
+The `outputSize` parameter in this demo is set to `'300 dpi'`, which will convert the `dimensions` and `orientation` to a pixel size suitable for print when saving to PNG.
 
 ## License
 
