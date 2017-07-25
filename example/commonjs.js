@@ -1,4 +1,8 @@
-// An example of how the module would look with CommonJS
+/*
+  This is an example of how to format your module if
+  you prefer to use CommonJS.
+*/
+
 const { PaperSize, Orientation } = require('penplot');
 
 module.exports = function createPlot (context, dimensions) {
@@ -11,7 +15,7 @@ module.exports = function createPlot (context, dimensions) {
   };
 
   function draw (dt = 0) {
-    context.fillRect(0, 0, 3, 3);
+    context.fillRect(0, 0, width / 2, height / 2);
   }
 };
 

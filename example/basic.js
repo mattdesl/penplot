@@ -1,8 +1,14 @@
+/*
+  This is a basic example of a plot that could be sent
+  to AxiDraw V3 and similar pen plotters.
+*/
+
 import newArray from 'new-array';
 
-import { PaperSize, Orientation, cmToPixels } from 'penplot';
+import { PaperSize, Orientation } from 'penplot';
 import { randomFloat, setSeed } from 'penplot/util/random';
 import { polylinesToSVG } from 'penplot/util/svg';
+
 setSeed(2);
 
 export const orientation = Orientation.PORTRAIT;
@@ -33,9 +39,8 @@ export default function createPlot (context, dimensions) {
   return {
     draw,
     print,
-    animate: false,
     clear: true,
-    background: 'white',
+    background: 'white'
   };
 
   function draw () {
