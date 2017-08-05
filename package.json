@@ -37,6 +37,8 @@
     "downloads-folder": "^1.0.0",
     "envify": "^4.1.0",
     "escodegen": "^1.8.1",
+    "gl-vec2": "^1.0.0",
+    "gl-vec3": "^1.0.3",
     "glob": "^7.1.1",
     "globby": "^6.1.0",
     "insert-css": "^2.0.0",
@@ -82,8 +84,6 @@
     "color-convert": "^1.9.0",
     "css-color-converter": "^1.1.0",
     "draw-triangles-2d": "^1.0.0",
-    "gl-vec2": "^1.0.0",
-    "gl-vec3": "^1.0.3",
     "icosphere": "^1.0.0",
     "nice-color-palettes": "^2.0.0",
     "perspective-camera": "^2.0.1"
