@@ -4,13 +4,14 @@ import lineclip from 'lineclip';
 import arrayAlmostEqual from 'array-almost-equal';
 import triangleCentroid from 'triangle-centroid';
 import insideTriangle from 'point-in-triangle';
+import * as RND from './random';
 
 const tmp1 = [];
 const tmp2 = [];
 const tmpTriangle = [ 0, 0, 0 ];
 
 // Random point in N-dimensional triangle
-export function randomPointInTriangle (out = [], a, b, c, u = random(), v = random()) {
+export function randomPointInTriangle (out = [], a, b, c, u = RND.random(), v = RND.random()) {
   if ((u + v) > 1) {
     u = 1 - u;
     v = 1 - v;
