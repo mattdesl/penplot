@@ -69,8 +69,7 @@ export const randomInt = (min, max) => {
 };
 
 // uniform distribution in a 2D circle
-export const randomCircle = (out, scale) => {
-  scale = scale || 1.0;
+export const randomCircle = (out, scale = 1) => {
   var r = random() * 2.0 * Math.PI;
   out[0] = Math.cos(r) * scale;
   out[1] = Math.sin(r) * scale;
@@ -78,8 +77,7 @@ export const randomCircle = (out, scale) => {
 };
 
 // uniform distribution in a 3D sphere
-export const randomSphere = (out, scale) => {
-  scale = scale || 1.0;
+export const randomSphere = (out, scale = 1) => {
   var r = random() * 2.0 * Math.PI;
   var z = (random() * 2.0) - 1.0;
   var zScale = Math.sqrt(1.0 - z * z) * scale;
