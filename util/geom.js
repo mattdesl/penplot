@@ -115,10 +115,10 @@ export function createHatchLines (bounds, angle = -Math.PI / 4, spacing = 0.5, o
   let i = -r;
   while (i <= r) {
     // Line starts at (i, -r) and goes to (i, +r)
-    const x1 = cx + ( i * ca ) + ( r * sa ); //  i * ca - (-r) * sa
-    const y1 = cy + ( i * sa ) - ( r * ca ); //  i * sa + (-r) * ca
-    const x2 = cx + ( i * ca ) - ( r * sa ); //  i * ca - (+r) * sa
-    const y2 = cy + ( i * sa ) + ( r * ca ); //  i * sa + (+r) * ca
+    const x1 = cx + (i * ca) + (r * sa); //  i * ca - (-r) * sa
+    const y1 = cy + (i * sa) - (r * ca); //  i * sa + (-r) * ca
+    const x2 = cx + (i * ca) - (r * sa); //  i * ca - (+r) * sa
+    const y2 = cy + (i * sa) + (r * ca); //  i * sa + (+r) * ca
     i += spacing;
     // Remove any potential hatch lines which are entirely
     // outside of the bounding box
@@ -133,8 +133,6 @@ export function createHatchLines (bounds, angle = -Math.PI / 4, spacing = 0.5, o
   return out;
 }
 
-
-
 export function intersectLineSegmentLineSegment (p1, p2, p3, p4) {
   // Reference:
   // https://github.com/evil-mad/EggBot/blob/master/inkscape_driver/eggbot_hatch.py
@@ -142,13 +140,13 @@ export function intersectLineSegmentLineSegment (p1, p2, p3, p4) {
   const d21y = p2[1] - p1[1];
   const d43x = p4[0] - p3[0];
   const d43y = p4[1] - p3[1];
-  
+
   // denominator
   const d = d21x * d43y - d21y * d43x;
   if (d === 0) return -1;
 
   const nb = (p1[1] - p3[1]) * d21x - (p1[0] - p3[0]) * d21y;
-  const sb = nb / d
+  const sb = nb / d;
   if (sb < 0 || sb > 1) return -1;
 
   const na = (p1[1] - p3[1]) * d43x - (p1[0] - p3[0]) * d43y;
@@ -278,6 +276,24 @@ export function resampleLineBySpacing (points, spacing = 1, closed = false) {
     }
   }
   return result;
+}
+
+export function getPolylinePerimeter (points, closed = false) {
+  let perimeter = 0;
+  let lastPosition = points.length - 1;
+  for (let i = 0; i < lastPosition; i++) {
+    perimeter += vec2.distance(points[i], points[i + 1]);
+  }
+  if (closed && points.length > 1) {
+    perimeter += vec2.distance(points[points.length - 1], points[0]);
+  }
+  return perimeter;
+}
+
+export function resampleLineByCount (points, count = 1, closed = false) {
+  if (count <= 0) return [];
+  const perimeter = getPolylinePerimeter(points, closed);
+  return resampleLineBySpacing(points, perimeter / count, closed);
 }
 
 // Returns a list that is a cubic spline of the input points
