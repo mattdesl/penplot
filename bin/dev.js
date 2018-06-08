@@ -106,7 +106,7 @@ function dev (args, argv, entries) {
   function svg (filePath, req, res) {
     if (!req.body || !req.body.svg) {
       res.writeHead(400, 'missing SVG in print()');
-      res.end;
+      res.end();
     }
     fs.writeFile(filePath, req.body.svg, function (err) {
       if (err) {
@@ -123,7 +123,7 @@ function dev (args, argv, entries) {
   function png (filePath, req, res) {
     if (!req.body || !req.body.data) {
       res.writeHead(400, 'missing base64 data for save function');
-      res.end;
+      res.end();
     }
     const data = Buffer.from(req.body.data, 'base64');
     fs.writeFile(filePath, data, function (err) {
