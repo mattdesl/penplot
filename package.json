@@ -117,8 +117,5 @@
   },
   "bin": {
     "penplot": "./bin/index.js"
-  },
-  "optionalDependencies": {
-    "canvas": "^1.6.5"
   }
 }

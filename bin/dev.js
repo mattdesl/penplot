@@ -25,6 +25,7 @@ function dev (args, argv, entries) {
   const isNode = argv.node;
   if (isNode) {
     process.env.IS_NODE = envVars.IS_NODE = '1';
+    throw new Error('The --node option has been removed in penplot@3.x');
   }
 
   if (isNode) {

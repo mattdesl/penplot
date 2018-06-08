@@ -12,7 +12,6 @@ Some features:
 - Hotkey for SVG rendering
 - A builtin library of utilities for random numbers, geometry tools, SVG exporting, and other functions
 - Easy integration with Inkscape and AxiDraw v3
-- Plots can be rendered in Node.js instead of the browser, sometimes useful for huge print sizes where the browser may have more strict memory limits
 
 ## Quick Start
 
@@ -107,18 +106,9 @@ penplot plot.js --open
 
 # set the output folder for SVG/PNG files
 penplot plot.js --output=tmp
-
-# generate a PNG with Node.js
-penplot plot.js --node
-
-# write PNG to stdout
-penplot plot.js --node --stdout > file.png
-
-# write PNG to custom output folder
-penplot plot.js --node --output=tmp 
 ```
 
-## Node.js
+## Print Output
 
 You can also use this as a tool for developing algorithmic/generative art. For example, you can develop the artwork in a browser for LiveReload and fast iterations, and when you want to print it you can set the dimensions and output size like so:
 
@@ -137,12 +127,6 @@ export default function createPlot (context, dimensions) {
     outputSize: '300 dpi'
   }
 }
-```
-
-Then, use the `--node` flag to run the plot with `node-canvas`, assuming none of your code is browser-specific.
-
-```sh
-penplot my-plot.js --node --stdout > render.png
 ```
 
 The `outputSize` option can be any of the following:
